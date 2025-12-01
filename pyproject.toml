@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["terracodec*"]
+
+[project]
+name = "terracodec"
+version = "0.1.0"
+description = "Learned compression models for multispectral and multitemporal Earth Observation data."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+authors = [
+    { name = "Julen Costa Watanabe", email = "julen.costa@gmail.com"},
+    { name = "Isabelle Wittmann", email = "isabelle.wittmann1@ibm.com"},
+    { name = "Benedikt Blumenstiel", email = "benedikt.blumenstiel@ibm.com"},
+]
+keywords = ["earth-observation", "compression", "deep-learning"]
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
+dependencies = [
+    "torch>=2.0.0",
+    "torchvision",
+    "terratorch>=1.0",
+    "huggingface-hub",
+    "compressai",
+    "xarray==2024.3.0",
+    "rioxarray==0.17.0",
+    "zarr==2.18.0",
+    "numcodecs==0.15.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/IBM/terracodec"
+Repository = "https://github.com/IBM/terracodec"
+Issues = "https://github.com/IBM/terracodec/issues"
