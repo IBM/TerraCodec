@@ -9,8 +9,8 @@ Compared to classical codecs (JPEG2000, WebP, HEVC), TerraCodec achieves **3–1
 🤗 **Models:** https://huggingface.co/embed2scale
 
 <div align="center">
-  <a href="assets/reconstructions.pdf">
-    <img src="assets/reconstructions.pdf" alt="TerraCodec Reconstructions" width="100%">
+  <a href="assets/reconstructions.png">
+    <img src="assets/reconstructions.png" alt="TerraCodec Reconstructions" width="100%">
   </a>
 </div>
 
@@ -44,7 +44,7 @@ TerraCodec includes **image codecs** and **temporal codecs** for EO data.
 <details>
 <summary><b>TEC Image Architecture</b></summary>
 
-[![TEC-ELIC Architecture](assets/TEC_ELIC_architecture.pdf)](assets/TEC_ELIC_architecture.pdf)
+[![TEC-ELIC Architecture](assets/TEC_image_architecture.png)](assets/TEC_image_architecture.png)
 
 </details>
 
@@ -58,14 +58,14 @@ TerraCodec includes **image codecs** and **temporal codecs** for EO data.
 <details>
 <summary><b>TEC-TT Architecture</b></summary>
 
-[![TEC-TT Architecture](assets/TEC_TT_architecture.pdf)](assets/TEC_TT_architecture.pdf)
+[![TEC-TT Architecture](assets/TEC_TT_architecture.png)](assets/TEC_TT_architecture.png)
 
 </details>
 
 <details>
 <summary><b>FlexTEC Examples</b></summary>
 
-[![FlexTEC Examples](assets/TEC_Flex_examples.pdf)](assets/TEC_Flex_examples.pdf)
+[![FlexTEC Examples](assets/TEC_Flex_examples.png)](assets/TEC_Flex_examples.png)
 
 </details>
 
