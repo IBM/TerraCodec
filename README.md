@@ -1,15 +1,15 @@
 # TerraCodec
 **Compressing Optical Earth Observation Data**
 
+TerraCodec (TEC) is a family of pretrained neural compression models for optical Sentinel-2 Earth Observation imagery. Models compress multispectral images and seasonal time series using learned latent representations and entropy coding.
+
+Compared to classical codecs (JPEG2000, WebP, HEVC), TerraCodec achieves **3–10× higher compression** at comparable reconstruction quality on multispectral EO imagery. Temporal models further improve compression by exploiting redundancy across seasonal sequences.
+
 <div align="center">
   <a href="assets/reconstructions.png">
     <img src="assets/reconstructions.png" alt="TerraCodec Reconstructions" width="100%">
   </a>
 </div>
-
-TerraCodec (TEC) is a family of pretrained neural compression models for optical Sentinel-2 Earth Observation imagery. Models compress multispectral images and seasonal time series using learned latent representations and entropy coding.
-
-Compared to classical codecs (JPEG2000, WebP, HEVC), TerraCodec achieves **3–10× higher compression** at comparable reconstruction quality on multispectral EO imagery. Temporal models further improve compression by exploiting redundancy across seasonal sequences.
 
 📄 **Paper:** https://arxiv.org/abs/2510.12670  
 🤗 **Models:** https://huggingface.co/embed2scale
