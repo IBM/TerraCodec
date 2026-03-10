@@ -5,8 +5,14 @@ TerraCodec (TEC) is a family of pretrained neural compression models for optical
 
 Compared to classical codecs (JPEG2000, WebP, HEVC), TerraCodec achieves **3–10× higher compression** at comparable reconstruction quality on multispectral EO imagery. Temporal models further improve compression by exploiting redundancy across seasonal sequences.
 
-📄 **Paper:** https://arxiv.org/abs/2510.12670  
+📄 **Paper:** https://arxiv.org/abs/2510.12670
 🤗 **Models:** https://huggingface.co/embed2scale
+
+<div align="center">
+  <a href="assets/reconstructions.pdf">
+    <img src="assets/reconstructions.pdf" alt="TerraCodec Reconstructions" width="100%">
+  </a>
+</div>
 
 ---
 
@@ -35,12 +41,33 @@ TerraCodec includes **image codecs** and **temporal codecs** for EO data.
 | **TEC-FP** | Factorized-prior model. Smallest, strong baseline. |
 | **TEC-ELIC** | Enhanced entropy model with spatial + channel context. Better rate–distortion, slightly larger. |
 
+<details>
+<summary><b>TEC Image Architecture</b></summary>
+
+[![TEC-ELIC Architecture](assets/TEC_ELIC_architecture.pdf)](assets/TEC_ELIC_architecture.pdf)
+
+</details>
+
 ### Temporal Codecs
 
 | Model | Description                                                                                                                 |
 |---|-----------------------------------------------------------------------------------------------------------------------------|
 | **TEC-TT** | Temporal Transformer for multispectral time series data. Predicts latent distributions from previous frames.                |
 | **FlexTEC** | Flexible-rate extension of TEC-TT. One checkpoint covers many compression levels via latent repacking and token prediction. |
+
+<details>
+<summary><b>TEC-TT Architecture</b></summary>
+
+[![TEC-TT Architecture](assets/TEC_TT_architecture.pdf)](assets/TEC_TT_architecture.pdf)
+
+</details>
+
+<details>
+<summary><b>FlexTEC Examples</b></summary>
+
+[![FlexTEC Examples](assets/TEC_Flex_examples.pdf)](assets/TEC_Flex_examples.pdf)
+
+</details>
 
 ---
 
@@ -220,3 +247,17 @@ If CPU and GPU results differ, nondeterminism is likely the cause.
 ## License
 
 Apache 2.0 — see [LICENSE](LICENSE).
+
+---
+
+## Acknowledgments
+
+<div align="center">
+  <img src="assets/E2S_Logo_Ext_Main.png" alt="Embed2Scale Logo" width="300">
+</div>
+
+This research is carried out as part of the Embed2Scale project and is co-funded
+by the EU Horizon Europe program under Grant Agreement No. 101131841.
+Additional funding for this project has been provided by the Swiss State Sec-
+retariat for Education, Research and Innovation (SERI) and UK Research and
+Innovation (UKRI).
