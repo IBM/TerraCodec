@@ -139,11 +139,11 @@ model = flextec_v1_s2l2a(
 TerraCodec models are also available through the
 [TerraTorch](https://github.com/terrastackai/terratorch) model registry.
 
-Install TerraTorch with the optional TerraCodec module. To ensure compatibility,
-we recommend installing TerraTorch from the **main branch**:
+Install TerraTorch via pip. To ensure compatibility,
+we recommend installing TerraTorch from the **main branch** until v1.3 is released:
 
 ```bash
-pip install "terratorch[terracodec] @ git+https://github.com/terrastackai/terratorch@main"
+pip install terracodec "terratorch @ git+https://github.com/terrastackai/terratorch@main"
 ```
 Models can then be instantiated directly via the registry:
 ```python
