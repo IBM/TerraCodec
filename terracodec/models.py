@@ -163,6 +163,16 @@ def build_terracodec(
     def _parse_available_keys(
         keys: Iterable[str], lr_only_flag: Optional[bool]
     ) -> Tuple[Dict[float, str], Dict[float, str]]:
+        """
+        Return mappings from numeric lambda -> key, split by standard vs lr-only.
+
+        Args:
+            keys: iterable of keys like 'lambda-5', 'lambda-800-lronly'.
+            lr_only_flag: when provided, can be used later to select the subset.
+
+        Returns:
+            (standard_map, lr_only_map): numeric->key for each subset.
+        """
         std_map: Dict[float, str] = {}
         lr_map: Dict[float, str] = {}
         pat = re.compile(r"^lambda-([0-9]*\.?[0-9]+)(-lronly)?$")
@@ -183,6 +193,16 @@ def build_terracodec(
         variant_name: str,
         lr_only_flag: Optional[bool] = None,
     ) -> str:
+        """
+        Validate and resolve the requested compression to an available key.
+
+        Rules:
+        - If string 'lambda-<v>' (or 'lambda-<v>-lronly'), must match an available key exactly;
+          otherwise raise ValueError.
+        - If numeric, choose the nearest available lambda (in the appropriate subset for FlexTEC
+          when lr_only_flag is provided). Warn when not exact.
+        - Any other type raises ValueError.
+        """
         available = list(keys)
         if isinstance(compression_value, str):
             if not compression_value.startswith("lambda-"):
@@ -199,6 +219,8 @@ def build_terracodec(
         if isinstance(compression_value, (int, float)):
             std_map, lr_map = _parse_available_keys(available, lr_only_flag)
 
+            # Choose subset for FlexTEC when lr_only_flag is set; otherwise prefer standard map and
+            # fallback to lr_map if standard is empty (robustness in case only lr-only exists).
             if lr_only_flag is True and lr_map:
                 target_map = lr_map
             elif lr_only_flag is False and std_map:
