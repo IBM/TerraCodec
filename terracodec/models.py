@@ -21,7 +21,6 @@ from typing import Any, Dict, Iterable, Optional, Tuple, Union
 import torch
 import yaml
 from huggingface_hub import hf_hub_download
-from terratorch.registry import TERRATORCH_FULL_MODEL_REGISTRY
 
 from terracodec.imagecodecs import ELIC, FactorizedPrior
 from terracodec.temporaltransformer import TemporalTransformer
@@ -97,29 +96,24 @@ pretrained_weights: Dict[str, Dict[str, Any]] = {
 
 
 def set_determinism() -> None:
-    # ---- Determinism & numerics ----
     torch.backends.cudnn.benchmark = False
     torch.backends.cudnn.deterministic = True
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cudnn.allow_tf32 = False
-    os.environ.setdefault(
-        "CUBLAS_WORKSPACE_CONFIG", ":16:8"
-    )  # needed for full determinism
+    os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":16:8")
     try:
         torch.use_deterministic_algorithms(True)
     except Exception:
-        pass  # older torch
+        pass
 
 
 def load_config_from_hf(repo_id: str, filename: str) -> dict:
-    """Download and parse YAML config from HuggingFace."""
     config_path = hf_hub_download(repo_id=repo_id, filename=filename)
     with open(config_path, "r") as f:
         return yaml.safe_load(f)
 
 
 def strip_prefix(state_dict: dict, prefix: str) -> dict:
-    """Remove a prefix from state_dict keys if present."""
     out = {}
     for k, v in state_dict.items():
         if k.startswith(prefix):
@@ -136,7 +130,7 @@ def build_terracodec(
     variant: Optional[str] = None,
     compression: Union[str, float, int] = "lambda-1",
     hf_config: bool = False,
-    in_channels: int = 12,  # default for S2 L2A
+    in_channels: int = 12,
     N: Optional[int] = None,
     M: Optional[int] = None,
     lr_only: Optional[bool] = None,
@@ -166,26 +160,15 @@ def build_terracodec(
     """
     set_determinism()
 
-    # ---- Helpers for compression handling ----
     def _parse_available_keys(
         keys: Iterable[str], lr_only_flag: Optional[bool]
     ) -> Tuple[Dict[float, str], Dict[float, str]]:
-        """Return mappings from numeric lambda -> key, split by standard vs lr-only.
-
-        Args:
-            keys: iterable of keys like 'lambda-5', 'lambda-800-lronly'.
-            lr_only_flag: when provided, can be used later to select the subset.
-
-        Returns:
-            (standard_map, lr_only_map): numeric->key for each subset.
-        """
         std_map: Dict[float, str] = {}
         lr_map: Dict[float, str] = {}
         pat = re.compile(r"^lambda-([0-9]*\.?[0-9]+)(-lronly)?$")
         for k in keys:
             m = pat.match(k)
             if not m:
-                # Ignore non-conforming keys silently
                 continue
             val = float(m.group(1))
             if m.group(2):
@@ -200,15 +183,6 @@ def build_terracodec(
         variant_name: str,
         lr_only_flag: Optional[bool] = None,
     ) -> str:
-        """Validate and resolve the requested compression to an available key.
-
-        Rules:
-        - If string 'lambda-<v>' (or 'lambda-<v>-lronly'), must match an available key exactly;
-          otherwise raise ValueError.
-        - If numeric, choose the nearest available lambda (in the appropriate subset for FlexTEC
-          when lr_only_flag is provided). Warn when not exact.
-        - Any other type raises ValueError.
-        """
         available = list(keys)
         if isinstance(compression_value, str):
             if not compression_value.startswith("lambda-"):
@@ -225,14 +199,11 @@ def build_terracodec(
         if isinstance(compression_value, (int, float)):
             std_map, lr_map = _parse_available_keys(available, lr_only_flag)
 
-            # Choose subset for FlexTEC when lr_only_flag is set; otherwise prefer standard map and
-            # fallback to lr_map if standard is empty (robustness in case only lr-only exists).
             if lr_only_flag is True and lr_map:
                 target_map = lr_map
             elif lr_only_flag is False and std_map:
                 target_map = std_map
             else:
-                # pick the non-empty one
                 target_map = std_map or lr_map
 
             if not target_map:
@@ -241,7 +212,6 @@ def build_terracodec(
                 )
 
             req = float(compression_value)
-            # Find nearest lambda
             lambdas = sorted(target_map.keys())
             nearest = min(lambdas, key=lambda x: abs(x - req))
             chosen_key = target_map[nearest]
@@ -255,14 +225,12 @@ def build_terracodec(
             f"compression must be a number or 'lambda-<value>' string. Got type {type(compression_value)}"
         )
 
-    # Prepare config
     config = {}
     if hf_config:
         if variant is None:
             raise ValueError("variant must be provided when hf_config=True.")
         repo_id = pretrained_weights[variant]["hf_hub_id"]
 
-        # Resolve to a lambda key if possible (uses available filenames when present)
         available_keys = pretrained_weights[variant]["hf_hub_filename"].keys()
         resolved_key = _select_lambda_key(
             compression, available_keys, variant, lr_only
@@ -283,7 +251,6 @@ def build_terracodec(
         if M is not None:
             config["M"] = M
 
-    # Model selection
     if model_type in ["factorizedprior", "elic"]:
         required_keys = {
             k: config[k] for k in ["in_channels", "N", "M"] if k in config
@@ -301,7 +268,6 @@ def build_terracodec(
     else:
         raise ValueError(f"Unknown model type: {model_type}")
 
-    # Load weights
     if ckpt_path:
         state_dict = torch.load(
             ckpt_path, map_location="cpu", weights_only=True
@@ -318,13 +284,11 @@ def build_terracodec(
         if variant is None:
             raise ValueError("variant must be provided when pretrained=True.")
 
-        # Validate/resolve the requested compression to a proper filename key
         available = pretrained_weights[variant]["hf_hub_filename"].keys()
         resolved_key = _select_lambda_key(
             compression, available, variant, lr_only
         )
 
-        # Load model from Hugging Face
         state_dict_file = hf_hub_download(
             repo_id=pretrained_weights[variant]["hf_hub_id"],
             filename=pretrained_weights[variant]["hf_hub_filename"][
@@ -346,7 +310,6 @@ def build_terracodec(
             assert hasattr(model, "setup_model_for_compression")
             model.setup_model_for_compression()
 
-    # Update bottleneck params
     if hasattr(model, "update"):
         try:
             model.update(force=True)
@@ -356,21 +319,18 @@ def build_terracodec(
     return model
 
 
-@TERRATORCH_FULL_MODEL_REGISTRY.register
 def terracodec_v1_fp_s2l2a(
     compression: Union[str, float, int] = "lambda-10",
     image_size: int = 256,
     mode="eval",
     **kwargs,
 ):
-    """
-    TerraCodec 1.0 FactorizedPrior model for Sentinel-2 L2A data.
-    """
+    """TerraCodec 1.0 FactorizedPrior model for Sentinel-2 L2A data."""
     model = build_terracodec(
         model_type="factorizedprior",
         variant="terracodec_v1_fp_s2l2a",
         compression=compression,
-        hf_config=True,  # configs are provided on hf
+        hf_config=True,
         image_size=image_size,
         **kwargs,
     )
@@ -381,21 +341,18 @@ def terracodec_v1_fp_s2l2a(
     return model
 
 
-@TERRATORCH_FULL_MODEL_REGISTRY.register
 def terracodec_v1_elic_s2l2a(
     compression: Union[str, float, int] = "lambda-10",
     image_size: int = 256,
     mode="eval",
     **kwargs,
 ):
-    """
-    TerraCodec 1.0 ELIC model for Sentinel-2 L2A data.
-    """
+    """TerraCodec 1.0 ELIC model for Sentinel-2 L2A data."""
     model = build_terracodec(
         model_type="elic",
         variant="terracodec_v1_elic_s2l2a",
         compression=compression,
-        hf_config=True,  # configs are provided on hf
+        hf_config=True,
         image_size=image_size,
         **kwargs,
     )
@@ -406,16 +363,13 @@ def terracodec_v1_elic_s2l2a(
     return model
 
 
-@TERRATORCH_FULL_MODEL_REGISTRY.register
 def terracodec_v1_tt_s2l2a(
     compression: Union[str, float, int] = "lambda-5",
     image_size: int = 256,
     mode="eval",
     **kwargs,
 ):
-    """
-    TerraCodec 1.0 Temporal Transformer model for Sentinel-2 L2A data.
-    """
+    """TerraCodec 1.0 Temporal Transformer model for Sentinel-2 L2A data."""
     model = build_terracodec(
         model_type="temporaltransformer",
         variant="terracodec_v1_tt_s2l2a",
@@ -430,22 +384,19 @@ def terracodec_v1_tt_s2l2a(
     return model
 
 
-@TERRATORCH_FULL_MODEL_REGISTRY.register
 def terracodec_v1_tt_s2l1c(
     compression: Union[str, float, int] = "lambda-20",
     image_size: int = 256,
     mode="eval",
     **kwargs,
 ):
-    """
-    TerraCodec 1.0 Temporal Transformer model for Sentinel-2 L1C data.
-    """
+    """TerraCodec 1.0 Temporal Transformer model for Sentinel-2 L1C data."""
     model = build_terracodec(
         model_type="temporaltransformer",
         variant="terracodec_v1_tt_s2l1c",
         compression=compression,
         image_size=image_size,
-        in_channels=13,  # S2 L1C has 13 channels
+        in_channels=13,
         **kwargs,
     )
 
@@ -455,7 +406,6 @@ def terracodec_v1_tt_s2l1c(
     return model
 
 
-@TERRATORCH_FULL_MODEL_REGISTRY.register
 def flextec_v1_s2l2a(
     compression: Union[str, float, int] = "lambda-800",
     image_size: int = 256,
@@ -463,9 +413,7 @@ def flextec_v1_s2l2a(
     lr_only: bool = False,
     **kwargs,
 ):
-    """
-    TerraCodec 1.0 Temporal Transformer model for Sentinel-2 L2A data.
-    """
+    """TerraCodec 1.0 Temporal Transformer model for Sentinel-2 L2A data."""
     model = build_terracodec(
         model_type="flextec",
         variant="flextec_v1_s2l2a",
