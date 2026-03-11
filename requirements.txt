@@ -1,0 +1,5 @@
+jupyter
+zarr==2.18.0
+numcodecs==0.15.1
+xarray==2024.3.0
+rioxarray==0.17.0

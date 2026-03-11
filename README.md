@@ -235,6 +235,17 @@ The `notebooks/` directory contains end-to-end examples:
 
 Example Sentinel-2 images are in `examples/`.
 
+For running these examples, clone and set up the repo with:
+```shell
+git clone https://github.com/IBM/TerraCodec.git
+cd TerraCodec
+python -m venv venv
+source venv/bin/activate
+pip install -e . # Install terracodec dependencies
+pip install -r requirements.txt  # Install packages for data loading
+
+```
+
 ---
 
 ## FAQ

@@ -28,13 +28,8 @@ classifiers = [
 dependencies = [
     "torch>=2.0.0",
     "torchvision",
-    "terratorch>=1.0",
     "huggingface-hub",
     "compressai",
-    "xarray==2024.3.0",
-    "rioxarray==0.17.0",
-    "zarr==2.18.0",
-    "numcodecs==0.15.1",
 ]
 
 [project.urls]
