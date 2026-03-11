@@ -21,9 +21,7 @@ Compared to classical codecs (JPEG2000, WebP, HEVC), TerraCodec achieves **3–1
 ## Installation
 
 ```bash
-git clone https://github.com/IBM/terracodec
-cd terracodec
-pip install -e .
+pip install terracodec
 ```
 
 **Requirements:** Python ≥ 3.10, PyTorch ≥ 2.0
@@ -67,6 +65,8 @@ TerraCodec includes **image codecs** and **temporal codecs** for EO data.
 <details>
 <summary><b>FlexTEC Examples</b></summary>
 
+*One model, multiple quality levels: by varying the token budget at inference, FlexTEC provides different compression/quality trade-offs. Early tokens encode global structure; additional tokens progressively refine details.*
+
 [![FlexTEC Examples](assets/TEC_Flex_examples.png)](assets/TEC_Flex_examples.png)
 
 </details>
@@ -103,17 +103,13 @@ The L1C model was used for the declouding experiments in the paper.
 
 ## Loading Models
 
-Models load through the **TerraTorch** registry:
-
-```python
-from terratorch import FULL_MODEL_REGISTRY
-import terracodec.terracodec_register  # registers TerraCodec models
-```
+### Standalone Usage
 
 **Image codec** — pass `compression` as a λ value:
 ```python
-model = FULL_MODEL_REGISTRY.build(
-    "terracodec_v1_fp_s2l2a",
+from terracodec import terracodec_v1_fp_s2l2a
+
+model = terracodec_v1_fp_s2l2a(
     pretrained=True,
     compression=10
 )
@@ -121,8 +117,9 @@ model = FULL_MODEL_REGISTRY.build(
 
 **Temporal codec** — pass `compression` as a λ value:
 ```python
-model = FULL_MODEL_REGISTRY.build(
-    "terracodec_v1_tt_s2l2a",
+from terracodec import terracodec_v1_tt_s2l2a
+
+model = terracodec_v1_tt_s2l2a(
     pretrained=True,
     compression=20
 )
@@ -130,11 +127,27 @@ model = FULL_MODEL_REGISTRY.build(
 
 **FlexTEC** — one model for many compression levels, quality is specified at inference time (see below):
 ```python
-model = FULL_MODEL_REGISTRY.build(
-    "flextec_v1_s2l2a",
+from terracodec import flextec_v1_s2l2a
+
+model = flextec_v1_s2l2a(
     pretrained=True,
 )
 ```
+
+### Alternative: TerraTorch Integration
+
+Models are also integrated into [TerraTorch's](https://github.com/terrastackai/terratorch) model registry:
+
+```python
+from terratorch import FULL_MODEL_REGISTRY
+
+model = FULL_MODEL_REGISTRY.build(
+    "terracodec_v1_fp_s2l2a",
+    pretrained=True,
+    compression=10
+)
+```
+
 
 ---
 
