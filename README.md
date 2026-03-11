@@ -281,6 +281,6 @@ Apache 2.0 — see [LICENSE](LICENSE).
 
 This research is carried out as part of the Embed2Scale project and is co-funded
 by the EU Horizon Europe program under Grant Agreement No. 101131841.
-Additional funding for this project has been provided by the Swiss State Sec-
-retariat for Education, Research and Innovation (SERI) and UK Research and
+Additional funding for this project has been provided by the Swiss State 
+Secretariat for Education, Research and Innovation (SERI) and UK Research and
 Innovation (UKRI).
