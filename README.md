@@ -269,10 +269,11 @@ If CPU and GPU results differ, nondeterminism is likely the cause.
 
 ```bibtex
 @article{terracodec2025,
-  title   = {TerraCodec: Neural Codecs for Earth Observation},
-  author  = {Costa Watanabe, Julen and Wittmann, Isabelle and Blumenstiel, Benedikt},
+  title   = {TerraCodec: Compressing Optical Earth Observation Data},
+  author  = {Costa-Watanabe, Julen and Wittmann, Isabelle and Blumenstiel, Benedikt and Schindler, Konrad},
   journal = {arXiv preprint arXiv:2510.12670},
-  year    = {2025}
+  year    = {2025},
+  doi     = {10.48550/arXiv.2510.12670}
 }
 ```
 
