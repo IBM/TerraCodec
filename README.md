@@ -2,8 +2,8 @@
 **Compressing Optical Earth Observation Data**
 
 <div align="center">
-  <a href="assets/reconstructions.png">
-    <img src="assets/reconstructions.png" alt="TerraCodec Reconstructions" width="100%">
+  <a href="https://raw.githubusercontent.com/IBM/TerraCodec/refs/heads/main/assets/reconstructions.jpg">
+    <img src="https://raw.githubusercontent.com/IBM/TerraCodec/refs/heads/main/assets/reconstructions.jpg" alt="TerraCodec Reconstructions" width="100%">
   </a>
 </div>
 
@@ -44,7 +44,7 @@ TerraCodec includes **image codecs** and **temporal codecs** for EO data.
 <details>
 <summary><b>TEC Image Architecture</b></summary>
 
-[![TEC-ELIC Architecture](assets/TEC_image_architecture.png)](assets/TEC_image_architecture.png)
+[![TEC-ELIC Architecture](assets/TEC_image_architecture.png)](https://raw.githubusercontent.com/IBM/TerraCodec/refs/heads/main/assets/TEC_image_architecture.png)
 
 </details>
 
@@ -58,7 +58,7 @@ TerraCodec includes **image codecs** and **temporal codecs** for EO data.
 <details>
 <summary><b>TEC-TT Architecture</b></summary>
 
-[![TEC-TT Architecture](assets/TEC_TT_architecture.png)](assets/TEC_TT_architecture.png)
+[![TEC-TT Architecture](assets/TEC_TT_architecture.png)](https://raw.githubusercontent.com/IBM/TerraCodec/refs/heads/main/assets/TEC_TT_architecture.png)
 
 </details>
 
@@ -67,7 +67,7 @@ TerraCodec includes **image codecs** and **temporal codecs** for EO data.
 
 *One model, multiple quality levels: by varying the token budget at inference, FlexTEC provides different compression/quality trade-offs. Early tokens encode global structure; additional tokens progressively refine details.*
 
-[![FlexTEC Examples](assets/TEC_Flex_examples.png)](assets/TEC_Flex_examples.png)
+[![FlexTEC Examples](assets/TEC_Flex_examples.png)](https://raw.githubusercontent.com/IBM/TerraCodec/refs/heads/main/assets/TEC_Flex_examples.jpg)
 
 </details>
 
@@ -288,7 +288,7 @@ Apache 2.0 — see [LICENSE](LICENSE).
 ## Acknowledgments
 
 <div align="center">
-  <img src="assets/E2S_Logo_Ext_Main.png" alt="Embed2Scale Logo" width="300">
+  <img src="https://raw.githubusercontent.com/IBM/TerraCodec/refs/heads/main/assets/E2S_Logo_Ext_Main.png" alt="Embed2Scale Logo" width="300">
 </div>
 
 This research is carried out as part of the Embed2Scale project and is co-funded

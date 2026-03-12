@@ -7,7 +7,7 @@ include = ["terracodec*"]
 
 [project]
 name = "terracodec"
-version = "0.3.0"
+version = "0.3.1"
 description = "Learned compression models for multispectral and multitemporal Earth Observation data."
 readme = "README.md"
 requires-python = ">=3.10"
